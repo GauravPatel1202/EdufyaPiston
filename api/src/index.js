@@ -88,10 +88,14 @@ expressWs(app);
     });
 
 
-    const [address, port] = config.bind_address.split(':');
+    let [address, port] = config.bind_address.split(':');
+
+    if (process.env.PORT) {
+        port = process.env.PORT;
+    }
 
     const server = app.listen(port, address, () => {
-        logger.info('API server started on', config.bind_address);
+        logger.info('API server started on', `${address}:${port}`);
     });
 
     process.on('SIGTERM', () => {

@@ -54,5 +54,5 @@ RUN (cd api && node src/index.js &) && \
 # Cleanup
 RUN rm install_packages.sh
 
-EXPOSE 2000
+EXPOSE 8080
 CMD ["node", "api/src/index.js"]
