@@ -1,5 +1,3 @@
-version: '3.2'
-
 services:
     api:
         image: ghcr.io/engineer-man/piston

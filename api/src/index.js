@@ -61,19 +61,18 @@ expressWs(app);
     installed_languages.for_each(pkg => runtime.load_package(pkg));
 
     logger.info('Starting API Server');
-    logger.debug('Constructing Express App');
-    logger.debug('Registering middleware');
-
+    logger.info('Starting API Server');
+    
     app.use(body_parser.urlencoded({ extended: true }));
     app.use(body_parser.json());
 
     app.use((err, req, res, next) => {
         return res.status(400).send({
-            stack: err.stack,
+            message: err.message,
         });
     });
 
-    logger.debug('Registering Routes');
+
 
     const api_v2 = require('./api/v2');
     app.use('/api/v2', api_v2);
@@ -88,7 +87,7 @@ expressWs(app);
         return res.status(404).send({ message: 'Not Found' });
     });
 
-    logger.debug('Calling app.listen');
+
     const [address, port] = config.bind_address.split(':');
 
     const server = app.listen(port, address, () => {

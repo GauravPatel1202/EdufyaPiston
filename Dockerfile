@@ -11,6 +11,7 @@ RUN apt-get update && \
 FROM node:18-bullseye-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV NODE_ENV=production
 
 RUN dpkg-reconfigure -p critical dash
 RUN apt-get update && \
@@ -36,13 +37,8 @@ RUN mkdir -p /piston/packages
 COPY api/package.json api/package-lock.json api/
 RUN cd api && npm install
 
-# Install CLI dependencies
-COPY cli/package.json cli/package-lock.json cli/
-RUN cd cli && npm install
-
 # Copy sources
 COPY api api
-COPY cli cli
 COPY packages packages
 
 # Prepare and run package installation

@@ -36,23 +36,23 @@ echo -e "${GREEN}[3/5] Setting up Piston directory...${NC}"
 DEPLOY_DIR="$HOME/EdufyaPiston"
 
 if [ -d "$DEPLOY_DIR" ]; then
-    echo "Directory exists. Pulling latest changes..."
+    echo "Directory $DEPLOY_DIR exists."
     cd "$DEPLOY_DIR"
-    # Check if it's a git repo
     if [ -d ".git" ]; then
-        git pull origin main || echo "Git pull failed. You might need to update manually."
+        echo "Pulling latest changes..."
+        git pull origin main || echo "Git pull failed. Proceeding with existing files."
     else
-        echo "Not a git repository. Skipping pull."
+        echo "Not a git repository. Proceeding with existing files."
     fi
 else
-    echo "Cloning repository..."
-    # Cloning public/private repo. If private, requires SSH keys or simple HTTPS auth
-    # For now, we assume the user might have to clone manually if auth is needed, 
-    # but we provides the command.
-    git clone https://github.com/GauravPatel1202/EdufyaPiston.git "$DEPLOY_DIR" || {
-        echo "Clone failed. Please ensure you have access rights."
-        echo "Creating directory manually for you to upload files..."
-        mkdir -p "$DEPLOY_DIR"
+    echo "Directory not found. Cloning repository..."
+    # Replace with your actual repository URL
+    REPO_URL="https://github.com/GauravPatel1202/EdufyaPiston.git"
+    
+    git clone "$REPO_URL" "$DEPLOY_DIR" || {
+        echo -e "${RED}Clone failed!${NC}"
+        echo "Please manually create $DEPLOY_DIR and upload the files."
+        exit 1
     }
     cd "$DEPLOY_DIR"
 fi
