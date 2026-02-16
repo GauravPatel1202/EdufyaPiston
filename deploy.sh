@@ -14,15 +14,19 @@ sudo apt-get upgrade -y
 
 # 2. Install Dependencies (Docker, Git, etc.)
 echo -e "${GREEN}[2/5] Installing Docker and Git...${NC}"
+
+# Remove conflicting old packages if they exist
+echo "Removing old Docker versions..."
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg -y || true; done
+
+# Install using official convenience script for robustness
 if ! command -v docker &> /dev/null; then
-    sudo apt-get install -y ca-certificates curl gnupg lsb-release git
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    rm get-docker.sh
+    # Add current user to docker group to avoid sudo
+    sudo usermod -aG docker $USER || true
+    echo "Docker installed successfully."
 else
     echo "Docker already installed."
 fi
