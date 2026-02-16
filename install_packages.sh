@@ -1,31 +1,49 @@
 #!/bin/bash
 set -e
 
-# CLI is assumed to be at /piston/cli/index.js in the Docker image
-CLI="/piston/cli/index.js"
+echo "Installing language runtimes using Piston API..."
 
-echo "Installing language runtimes using Piston CLI..."
+# Helper to install package
+install_package() {
+    LANG=$1
+    echo "Installing $LANG..."
+    node -e "
+    const http = require('http');
+    const data = JSON.stringify({ language: '$LANG', version: '*' });
+    const options = {
+        hostname: 'localhost',
+        port: 2000,
+        path: '/api/v2/packages',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length
+        }
+    };
+    const req = http.request(options, res => {
+        if (res.statusCode !== 200) {
+            console.error('Failed to install $LANG: Status ' + res.statusCode);
+            process.exit(1);
+        }
+        res.pipe(process.stdout);
+    });
+    req.on('error', error => {
+        console.error('Error installing $LANG:', error);
+        process.exit(1);
+    });
+    req.write(data);
+    req.end();
+    "
+    echo ""
+}
 
-# Node.js
-node $CLI ppman install node
-
-
-# Python
-node $CLI ppman install python
-
-# Java
-node $CLI ppman install java
-
-# C++ (gcc)
-node $CLI ppman install gcc
-
-# Go
-node $CLI ppman install go
-
-# .NET (dotnet)
-node $CLI ppman install dotnet
-
-# Kotlin
-node $CLI ppman install kotlin
+# Install Languages
+install_package "node"
+install_package "python"
+install_package "java"
+install_package "gcc"
+install_package "go"
+install_package "dotnet"
+install_package "kotlin"
 
 echo "Installation complete!"
