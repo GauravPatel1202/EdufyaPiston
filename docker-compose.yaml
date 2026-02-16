@@ -1,11 +1,16 @@
+version: '3.8'
+
 services:
     api:
+        build:
+            context: .
+            dockerfile: Dockerfile
         image: ghcr.io/engineer-man/piston
         container_name: piston_api
         restart: always
         privileged: true
         ports:
-            - 2000:2000
+            - 8080:8080
         volumes:
             - ./data/piston/packages:/piston/packages
         environment:
