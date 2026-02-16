@@ -1,4 +1,4 @@
-version: '2.4'
+version: '2.1'
 
 services:
     api:
@@ -10,7 +10,7 @@ services:
         restart: always
         privileged: true
         ports:
-            - 8080:8080
+            - 2000:2000
         volumes:
             - ./data/piston/packages:/piston/packages
         environment:
