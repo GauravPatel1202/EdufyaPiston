@@ -1,35 +1,31 @@
 #!/bin/bash
-
-# Ensure we are in the EdufyaPiston directory
 set -e
-cd "$(dirname "$0")"
 
-echo "Installing CLI dependencies..."
-cd cli
-npm install
-cd ..
+# CLI is assumed to be at /piston/cli/index.js in the Docker image
+CLI="/piston/cli/index.js"
 
 echo "Installing language runtimes using Piston CLI..."
 
 # Node.js
-node cli/index.js ppman install node
+node $CLI ppman install node
+
 
 # Python
-node cli/index.js ppman install python
+node $CLI ppman install python
 
 # Java
-node cli/index.js ppman install java
+node $CLI ppman install java
 
 # C++ (gcc)
-node cli/index.js ppman install gcc
+node $CLI ppman install gcc
 
 # Go
-node cli/index.js ppman install go
+node $CLI ppman install go
 
 # .NET (dotnet)
-node cli/index.js ppman install dotnet
+node $CLI ppman install dotnet
 
 # Kotlin
-node cli/index.js ppman install kotlin
+node $CLI ppman install kotlin
 
 echo "Installation complete!"
